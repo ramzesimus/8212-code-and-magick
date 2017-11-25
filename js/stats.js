@@ -17,7 +17,7 @@ var boxSubtitle = 'Список результатов:';
 
 // Player
 var playerName = 'Вы';
-var playerBarColor = 'rgba(0, 0, 0, 1)';
+var playerBarColor = 'rgba(255, 0, 0, 1)';
 
 // Get item with the max value
 var getMaxItem = function (arr) {
