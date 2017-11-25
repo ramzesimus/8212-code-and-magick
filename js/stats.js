@@ -1,5 +1,24 @@
 'use strict';
 
+// Box
+var boxBgColor = '#fff';
+var boxInitialX = 100;
+var boxInitialY = 10;
+var boxWidth = 420;
+var boxHeight = 270;
+var boxShadowSize = 10;
+var boxShadowColor = 'rgba(0, 0, 0, 0.7)';
+
+// Box Notification
+var boxColor = 'rgba(0, 0, 0, 1)';
+var boxFont = '16px PT Mono';
+var boxTitle = 'Ура вы победили!';
+var boxSubtitle = 'Список результатов:';
+
+// Player
+var playerName = 'Вы';
+var playerBarColor = 'rgba(0, 0, 0, 1)';
+
 // Get item with the max value
 var getMaxItem = function (arr) {
   var max = -1;
@@ -9,43 +28,55 @@ var getMaxItem = function (arr) {
       max = time;
     }
   }
-
   return max;
-}
+};
+
+// Set Bar color
+var setBarColor = function (ctx, names) {
+  if (names === playerName) {
+    ctx.fillStyle = playerBarColor;
+  } else {
+    ctx.fillStyle = 'rgba(0, 0, 255, ' + Math.random() + ')';
+  }
+};
 
 // Render statistics
 window.renderStatistics = function (ctx, names, times) {
 
   // Score Box shadow
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.fillRect(110, 20, 420, 270);
+  ctx.fillStyle = boxShadowColor;
+  ctx.fillRect(boxInitialX + boxShadowSize, boxInitialY + boxShadowSize, boxWidth, boxHeight);
 
   // Score Box
-  ctx.fillStyle = 'white';
-  ctx.fillRect(100, 10, 420, 270);
+  ctx.fillStyle = boxBgColor;
+  ctx.fillRect(boxInitialX, boxInitialY, boxWidth, boxHeight);
 
   // Notification
-  ctx.fillStyle = '#000';
-  ctx.font = '16px PT Mono';
-  ctx.fillText('Ура вы победили!', 120, 40);
-  ctx.fillText('Список результатов:', 120, 60);
+  ctx.fillStyle = boxColor;
+  ctx.font = boxFont;
+  ctx.fillText(boxTitle, 120, 40);
+  ctx.fillText(boxSubtitle, 120, 60);
 
   // Histogram
-  var histogramHeight = 150,
-      barWidth = 40,
-      barGutter = 50,
-      columnWidth = barWidth + barGutter,
-      histogramInitialX = 155,
-      histogramInitialY = 90;
+  var histogramHeight = 150;
+  var barWidth = 40;
+  var barGutter = 50;
+  var columnWidth = barWidth + barGutter;
+  var histogramInitialX = 155;
+  var histogramInitialY = 90;
+  var histogramResultMargin = histogramInitialY - 5;
+  var histogramLabelPosition = histogramHeight + histogramInitialY + 20;
 
   // Proportion Step
   var step = histogramHeight / (getMaxItem(times) - 0);
 
-  // Draw Bars with Names
+  // Draw Bars (set color, fill bars, add times, add labels)
   for (var i = 0; i < times.length; i++) {
+    setBarColor(ctx, names[i]);
     ctx.fillRect(i * columnWidth + histogramInitialX, histogramInitialY + (histogramHeight - times[i] * step), barWidth, times[i] * step);
-    ctx.fillText(Math.ceil(times[i]), i * columnWidth + histogramInitialX, histogramInitialY - 5 + (histogramHeight - times[i] * step));
-    ctx.fillText(names[i], i * columnWidth + histogramInitialX, histogramHeight + 110);
+    ctx.fillStyle = '#000';
+    ctx.fillText(Math.ceil(times[i]), i * columnWidth + histogramInitialX, histogramResultMargin + (histogramHeight - times[i] * step));
+    ctx.fillText(names[i], i * columnWidth + histogramInitialX, histogramLabelPosition);
   }
 
 };
