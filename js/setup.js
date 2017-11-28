@@ -30,7 +30,7 @@ var generateWizards = function (firstNames, lastNames, coatColors, eyesColors) {
       name: firstNames[getRandomInt(0, firstNamesLength)] + ' ' + lastNames[getRandomInt(0, lastNamesLength)],
       coatColor: coatColors[getRandomInt(0, coatColorsLength)],
       eyesColor: eyesColors[getRandomInt(0, eyesColorsLength)]
-    }
+    };
   }
   return wizards;
 };
