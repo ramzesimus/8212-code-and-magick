@@ -44,13 +44,55 @@
 
   userDialogClose.addEventListener('click', function () {
     closeUserDialog();
+    userDialog.style = '';
   });
 
   userDialogClose.addEventListener('keydown', function (evt) {
     window.util.isEnterEvent(evt, function () {
       closeUserDialog();
+      userDialog.style = '';
     });
   });
 
+  // Allows to drag Dialog Popup
+  var userDialogHandle = userDialog.querySelector('.setup-user-pic');
+  // fixes issue with type input that overlaps avatar
+  userDialogHandle.style.zIndex = 1;
 
+  userDialogHandle.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      userDialog.style.top = (userDialog.offsetTop - shift.y) + 'px';
+      userDialog.style.left = (userDialog.offsetLeft - shift.x) + 'px';
+
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('moveup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
 })();
