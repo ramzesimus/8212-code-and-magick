@@ -12,20 +12,14 @@
   var wizardEyes = document.querySelector('.setup-wizard .wizard-eyes');
   var fireball = document.querySelector('.setup-fireball-wrap');
 
-  // Change wizard coat color on click
-  wizardCoat.addEventListener('click', function () {
-    wizardCoat.style.fill = window.util.getRandomIntArr(WIZARD_COAT_COLORS);
-  });
+  // Colorize wizard coat color on click
+  window.colorizeElement(wizardCoat, WIZARD_COAT_COLORS, window.util.fillElement);
 
-  // Change wizard eyes color on click
-  wizardEyes.addEventListener('click', function () {
-    wizardEyes.style.fill = window.util.getRandomIntArr(WIZARD_EYES_COLORS);
-  });
+  // Colorize wizard eyes color on click
+  window.colorizeElement(wizardEyes, WIZARD_EYES_COLORS, window.util.fillElement);
 
-  // Change fireball color on click
-  fireball.addEventListener('click', function () {
-    fireball.style.backgroundColor = window.util.getRandomIntArr(FIREBALL_COLORS);
-  });
+  // Colorize fireball color on click
+  window.colorizeElement(fireball, FIREBALL_COLORS, window.util.changeElementBackground);
 
   var similarListElement = document.querySelector('.setup-similar-list');
   var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');

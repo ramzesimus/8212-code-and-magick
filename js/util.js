@@ -40,6 +40,16 @@
         }
       }
       return max;
+    },
+
+    // Change 'fill' property of element
+    fillElement: function (element, color) {
+      element.style.fill = color;
+    },
+
+    // Change 'backround-color' property of element
+    changeElementBackground: function (element, color) {
+      element.style.backgroundColor = color;
     }
   };
 })();
