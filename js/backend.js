@@ -41,5 +41,5 @@
       xhr.open('POST', SERVER_URL);
       xhr.send(data);
     },
-  }
+  };
 })();
