@@ -1,11 +1,10 @@
 'use strict';
 
 (function () {
-  var WIZARD_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-  var WIZARD_SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
   var WIZARD_COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
   var WIZARD_EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
   var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+  var WIZARDS_COUNT = 4;
 
   // Wizard
   var wizardCoat = document.querySelector('.setup-wizard .wizard-coat');
@@ -24,54 +23,16 @@
   var similarListElement = document.querySelector('.setup-similar-list');
   var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
 
-  // Generate various wizards
-  var generateWizards = function (firstNames, lastNames, coatColors, eyesColors) {
-    var wizards = [];
-    var firstNamesLength = firstNames.length - 1;
-    var lastNamesLength = lastNames.length - 1;
-    var coatColorsLength = coatColors.length - 1;
-    var eyesColorsLength = eyesColors.length - 1;
-
-    for (var i = 0; i < 4; i++) {
-      wizards[i] = {
-        name: firstNames[window.util.getRandomInt(0, firstNamesLength)] + ' ' + lastNames[window.util.getRandomInt(0, lastNamesLength)],
-        coatColor: coatColors[window.util.getRandomInt(0, coatColorsLength)],
-        eyesColor: eyesColors[window.util.getRandomInt(0, eyesColorsLength)]
-      };
-    }
-    return wizards;
-  };
-
-  // Generate wizards object
-  var wizards = generateWizards(WIZARD_NAMES, WIZARD_SURNAMES, WIZARD_COAT_COLORS, WIZARD_EYES_COLORS);
-
   // Render single wizard
   var renderWizard = function (wizard) {
     var wizardElement = similarWizardTemplate.cloneNode(true);
 
     wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
-    wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
-    wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
+    wizardElement.querySelector('.wizard-coat').style.fill = wizard.colorCoat;
+    wizardElement.querySelector('.wizard-eyes').style.fill = wizard.colorEyes;
 
     return wizardElement;
   };
-
-  // Get similar wizards and display wizards section
-  var getSimilarWizard = function (wizardsArr, target) {
-    var fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < wizardsArr.length; i++) {
-      fragment.appendChild(renderWizard(wizardsArr[i]));
-    }
-
-    document.querySelector('.setup-similar').classList.remove('hidden');
-
-    return target.appendChild(fragment);
-  };
-
-  // Output wizards
-  getSimilarWizard(wizards, similarListElement);
-
 
   // Shop & Artifacts
   var shopElement = document.querySelector('.setup-artifacts-shop');
@@ -125,5 +86,53 @@
   shopElement.addEventListener('dragend', function () {
     artifactsElement.style = '';
   });
+
+
+  var userDialog = document.querySelector('.setup');
+  var form = document.querySelector('.setup-wizard-form');
+
+  // On Form Submit Success
+  var onSuccess = function () {
+    var formAlert = document.querySelector('form-alert');
+    if (formAlert) {
+      formAlert.classList.add('hidden');
+    }
+    userDialog.classList.add('hidden');
+  };
+
+  // On Form Submit Error
+  var errorHandler = function (alertMessage) {
+    var node = document.createElement('div');
+
+    node.className = 'form-alert';
+
+    node.textContent = alertMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+
+    setTimeout(function () {
+      node.classList.add('form-alert--show');
+    }, 100);
+  };
+
+  // Get wizards
+  var successHandler = function (wizards) {
+    var fragment = document.createDocumentFragment();
+
+    for (var i = 0; i < WIZARDS_COUNT; i++) {
+      fragment.appendChild(renderWizard(wizards[i]));
+    }
+    similarListElement.appendChild(fragment);
+
+    userDialog.querySelector('.setup-similar').classList.remove('hidden');
+  };
+
+  // Upload data on server
+  form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.backend.save(new FormData(form), onSuccess, errorHandler);
+  });
+
+  // Set wizards
+  window.backend.load(successHandler, errorHandler);
 
 })();
