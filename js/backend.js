@@ -2,6 +2,12 @@
 
 (function () {
   var SERVER_URL = 'https://1510.dump.academy/code-and-magick';
+  var TIMEOUT = 10000;
+  var alertMessages = {
+    errorLoad: 'Произошла ошибка',
+    errorConnection: 'Произошла ошибка соединения',
+    errorTimeout: 'Запрос не успел выполниться'
+  };
 
   var setup = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
@@ -11,17 +17,17 @@
       if (xhr.status === 200) {
         onLoad(xhr.response);
       } else {
-        onError('Произошла ошибка');
+        onError(alertMessages.errorLoad);
       }
     });
     xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
+      onError(alertMessages.errorConnection);
     });
     xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+      onError(alertMessages.errorTimeout);
     });
 
-    xhr.timeout = 10000; // 10s
+    xhr.timeout = TIMEOUT;
 
     return xhr;
   };

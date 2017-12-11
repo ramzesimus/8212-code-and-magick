@@ -4,6 +4,7 @@
   var WIZARD_COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
   var WIZARD_EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
   var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+  var WIZARDS_COUNT = 4;
 
   // Wizard
   var wizardCoat = document.querySelector('.setup-wizard .wizard-coat');
@@ -104,23 +105,12 @@
     var node = document.createElement('div');
 
     node.className = 'form-alert';
-    node.style.backgroundColor = 'red';
-    node.style.position = 'fixed';
-    node.style.zIndex = 9;
-    node.style.left = 50 + '%';
-    node.style.top = 0 + 'px';
-    node.style.width = 600 + 'px';
-    node.style.marginLeft = -300 + 'px';
-    node.style.padding = 40 + 'px';
-    node.style.boxSizing = 'border-box';
-    node.style.transform = 'translateY(-100%)';
-    node.style.transition = 'all 0.2s ease';
 
     node.textContent = alertMessage;
     document.body.insertAdjacentElement('afterbegin', node);
 
     setTimeout(function () {
-      node.style.transform = 'translateY(0)';
+      node.classList.add('form-alert--show');
     }, 100);
   };
 
@@ -128,7 +118,7 @@
   var successHandler = function (wizards) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < WIZARDS_COUNT; i++) {
       fragment.appendChild(renderWizard(wizards[i]));
     }
     similarListElement.appendChild(fragment);
@@ -138,8 +128,8 @@
 
   // Upload data on server
   form.addEventListener('submit', function (evt) {
-    window.backend.save(new FormData(form), onSuccess, errorHandler);
     evt.preventDefault();
+    window.backend.save(new FormData(form), onSuccess, errorHandler);
   });
 
   // Set wizards
