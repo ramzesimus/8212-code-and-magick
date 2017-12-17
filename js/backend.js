@@ -47,5 +47,29 @@
       xhr.open('POST', SERVER_URL);
       xhr.send(data);
     },
+
+    // On Form Submit Success
+    onSuccess: function () {
+      var formAlert = document.querySelector('form-alert');
+      var userDialog = document.querySelector('.setup');
+      if (formAlert) {
+        formAlert.classList.add('hidden');
+      }
+      userDialog.classList.add('hidden');
+    },
+
+    errorHandler: function (alertMessage) {
+      var node = document.createElement('div');
+
+      node.className = 'form-alert';
+
+      node.textContent = alertMessage;
+      document.body.insertAdjacentElement('afterbegin', node);
+
+      setTimeout(function () {
+        node.classList.add('form-alert--show');
+      }, 100);
+    }
+
   };
 })();
